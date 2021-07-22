@@ -1,3 +1,4 @@
 db.js
 # dependencies
 node_modules/
+secret_key.js
