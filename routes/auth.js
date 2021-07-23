@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const SecretKey = require('../secret_key')
 const requireAuth = require('../middleware/requireAuth')
-router.get("/", requireAuth,(req, res) => {
+router.get("/",(req, res) => {
   res.send("hello world");
 });
 
