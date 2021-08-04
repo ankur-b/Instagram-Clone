@@ -1,7 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
-
+var cors = require('cors')
 const mongouri = require('./db')
 
 const app = express()
@@ -11,7 +11,7 @@ const postRoutes = require('./routes/post')
 
 mongoose.connect(mongouri,{
     useNewUrlParser:true,
-    useCreateIndex:true
+    useUnifiedTopology:true
 })
 mongoose.connection.on('connected',()=>{
     console.log("Dtabase Connected");
@@ -19,9 +19,10 @@ mongoose.connection.on('connected',()=>{
 mongoose.connection.on('error',(err)=>{
     console.log("Error",err);
 })
-app.use(bodyParser.json())
+app.use(express.json());
+//app.use(cors())
 app.use(authRoutes);
 app.use(postRoutes)
-app.listen(3000, () => {
-    console.log('App listening on port 3000!');
+app.listen(5000, () => {
+    console.log('App listening on port 5000!');
 });

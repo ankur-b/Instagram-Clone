@@ -1,11 +1,46 @@
-import React from "react";
+import React, {useState} from "react";
 import '../../App.css'
-import { Link } from "react-router-dom";
+import { Link,useHistory } from "react-router-dom";
+import M from 'materialize-css'
+//import Api from '../../Api/Api'
 const Signup = () => {
+  const history = useHistory()
+  const [name,setName] = useState("")
+  const [password,setPassword] = useState("")
+  const [email,setEmail] = useState("")
+  const PostData = () =>{
+    let isValidEmail=true
+    if(email){
+      if(!(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email))){
+        M.toast({html:"Invalid Email"})
+        isValidEmail=false
+      }
+    }
+    if(isValidEmail){
+      fetch("/signup",{
+        method:"post",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+          name:name,
+          email:email,
+          password:password,
+        })
+      }).then(res=>res.json())
+      .then(data=>{
+        if(data.error){
+          M.toast({html:data.error})
+        }else{
+          M.toast({html:data.message})
+          history.push('/login')
+        }
+      }).catch(err=>console.log(err))
+    }
+  }
   return (
     <div className="container">
       <div class="row" style={{ marginTop: 100, width: "60%" }}>
-        <form class="col s12" method="POST">
           <h2 class="center-align text-darken-2">Sign Up</h2>
           <div class="row">
             <div class="input-field col s10 offset-s1">
@@ -14,9 +49,10 @@ const Signup = () => {
                 type="text"
                 class="validate"
                 id="name"
-                required
+                value={name}
+                onChange={(e)=>setName(e.target.value)}
               />
-              <label for="name">Name</label>
+              <label htmlFor="name">Name</label>
               <span class="helper-text" data-error="Enter name"></span>
             </div>
           </div>
@@ -27,7 +63,8 @@ const Signup = () => {
                 type="text"
                 class="validate"
                 id="email"
-                required
+                value={email}
+                onChange={(e)=>setEmail(e.target.value)}
               />
               <label for="email">E-Mail</label>
               <span class="helper-text" data-error="Enter Email"></span>
@@ -40,7 +77,8 @@ const Signup = () => {
                 type="password"
                 class="validate"
                 id="password"
-                required
+                value={password}
+                onChange={(e)=>setPassword(e.target.value)}
               />
               <label for="password">Password</label>
               <span class="helper-text " data-error="Enter Password"></span>
@@ -60,15 +98,12 @@ const Signup = () => {
             <div class="right-align col s3 offset-s1">
               <button
                 class="btn waves-effect black waves-light btn-small"
-                type="submit"
-                name="signup"
-                id="submit"
+                onClick={()=>PostData()}
               >
-                Login
+                Signin
               </button>
             </div>
           </div>
-        </form>
       </div>
     </div>
   );

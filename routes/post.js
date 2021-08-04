@@ -3,7 +3,7 @@ const router = express.Router();
 const Post = require("../models/post");
 const requireAuth = require("../middleware/requireAuth");
 
-router.get("/posts", (req, res) => {
+router.get("/posts", requireAuth,(req, res) => {
   Post.find()
     .populate("postedBy","id name")
     .then((posts) => {
@@ -15,12 +15,12 @@ router.get("/posts", (req, res) => {
 });
 
 router.post("/createpost", requireAuth, (req, res) => {
-  const { title, body } = req.body;
-  if (!title || !body) {
+  const { title, body,pic } = req.body;
+  if (!title || !body || !pic) {
     return res.status(422).json({ error: "Please add all the fields" });
   }
   req.user.password = undefined;
-  const post = new Post({ title, body, postedBy: req.user });
+  const post = new Post({ title, body, photo:pic,postedBy: req.user });
   post
     .save()
     .then((result) => {
