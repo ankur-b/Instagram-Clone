@@ -1,14 +1,16 @@
-import React, {useState} from "react";
+import React, {useState,useContext} from "react";
 import '../../App.css'
-import { Link,useHistory } from "react-router-dom";
-import M from 'materialize-css'
+import { Link , useHistory} from "react-router-dom";
+import M from 'materialize-css';
+import {Context as AuthContext} from '../../Context/AuthContext';
 //import Api from '../../Api/Api'
 const Signup = () => {
   const history = useHistory()
+  const {state,Signup} = useContext(AuthContext) 
   const [name,setName] = useState("")
   const [password,setPassword] = useState("")
   const [email,setEmail] = useState("")
-  const PostData = () =>{
+  const PostData = async() =>{
     let isValidEmail=true
     if(email){
       if(!(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email))){
@@ -17,25 +19,7 @@ const Signup = () => {
       }
     }
     if(isValidEmail){
-      fetch("/signup",{
-        method:"post",
-        headers:{
-          "Content-Type":"application/json"
-        },
-        body:JSON.stringify({
-          name:name,
-          email:email,
-          password:password,
-        })
-      }).then(res=>res.json())
-      .then(data=>{
-        if(data.error){
-          M.toast({html:data.error})
-        }else{
-          M.toast({html:data.message})
-          history.push('/login')
-        }
-      }).catch(err=>console.log(err))
+      Signup({name,email,password,history})
     }
   }
   return (

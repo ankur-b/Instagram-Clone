@@ -1,12 +1,13 @@
 import React, { useContext } from "react";
-import { Link,useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { UserContext } from "../App";
+import { Context as AuthContext } from "../Context/AuthContext";
 import "./Navbar.css";
 const Navbar = () => {
-  const { state, dispatch } = useContext(UserContext);
-  const history = useHistory()
+  const { state, Signout } = useContext(AuthContext);
+  const history = useHistory();
   const renderList = () => {
-    if (state) {
+    if (state.user) {
       return [
         <li>
           <Link to="/profile">Profile</Link>
@@ -18,9 +19,7 @@ const Navbar = () => {
           <button
             class="btn waves-effect black waves-light btn-small"
             onClick={() => {
-              localStorage.clear();
-              dispatch({type:'CLEAR'});
-              history.push('/login')
+              Signout({ history });
             }}
           >
             Sign Out
@@ -42,7 +41,7 @@ const Navbar = () => {
     <nav className="white">
       <div className="container">
         <div className="nav-wrapper">
-          <Link to={state ? "/" : "/login"} className="brand-logo">
+          <Link to={state.user ? "/" : "/login"} className="brand-logo">
             Instagram
           </Link>
           <ul id="nav-mobile" className="right hide-on-med-and-down">

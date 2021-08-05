@@ -5,7 +5,7 @@ const Home = () => {
   useEffect(() => {
     fetch("/posts", {
       headers: {
-        Authorization: "Bearer " + localStorage.getItem("jwt"),
+        Authorization: "Bearer " + localStorage.getItem("token"),
       },
     })
       .then((res) => res.json())

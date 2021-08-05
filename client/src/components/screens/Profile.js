@@ -1,13 +1,13 @@
 import React, { useState, useEffect,useContext } from "react";
-import {UserContext} from '../../App'
+import {Context as AuthContext} from '../../Context/AuthContext'
 import "./profile.css";
 const Profile = () => {
   const [mypics, setPics] = useState([]);
-  const {state,dispatch} = useContext(UserContext)
+  const {state,dispatch} = useContext(AuthContext)
   useEffect(() => {
     fetch("/mypost", {
       headers: {
-        Authorization: "Bearer " + localStorage.getItem("jwt"),
+        Authorization: "Bearer " + localStorage.getItem("token"),
       },
     })
       .then((res) => res.json())
@@ -39,7 +39,8 @@ const Profile = () => {
           />
         </div>
         <div>
-          <h4>{state?state.name:""}</h4>
+          {console.log(state)}
+          <h4>{state?state.user.name:""}</h4>
           <div
             style={{
               display: "flex",
@@ -54,7 +55,7 @@ const Profile = () => {
         </div>
       </div>
       <div className="gallery">
-        {mypics.map((item) => {
+        {mypics===[]?<div>hh</div>:mypics.map((item) => {
           return <img key={item._id} className="item" src={item.photo} alt={item.title} />;
         })}
       </div>

@@ -2,9 +2,10 @@ import React, { useState,useContext} from "react";
 import "../../App.css";
 import {UserContext} from '../../App'
 import { Link, useHistory } from "react-router-dom";
+import {Context as AuthContext} from '../../Context/AuthContext';
 import M from "materialize-css";
 const Login = () => {
-  const {state,dispatch} = useContext(UserContext)
+  const {state,Signin} = useContext(AuthContext)
   const history = useHistory();
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -17,29 +18,7 @@ const Login = () => {
       }
     }
     if (isValidEmail) {
-      fetch("/signin", {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.error) {
-            M.toast({ html: data.error });
-          } else {
-            localStorage.setItem("jwt",data.token)
-            localStorage.setItem("user",JSON.stringify(data.user))
-            dispatch({type:"USER",payload:data.user})
-            M.toast({ html: 'Signedup Successfully'});
-            history.push("/");
-          }
-        })
-        .catch((err) => console.log(err));
+      Signin({email,password,history})
     }
   };
   return (

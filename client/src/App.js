@@ -6,17 +6,20 @@ import Profile from "./components/screens/Profile";
 import Login from "./components/screens/Login";
 import Signup from "./components/screens/Signup";
 import CreatePost from "./components/screens/CreatePost";
-import { BrowserRouter, Route, useHistory, Switch } from "react-router-dom";
+import { Route, useHistory, Switch } from "react-router-dom";
 import { reducer, initialState } from "./reducer/userReducer";
+import {Provider as AuthProvider} from "./Context/AuthContext"
+import {Context as AuthContext} from './Context/AuthContext' 
 export const UserContext = createContext();
 
 const Routing = () => {
   const history = useHistory();
-  const { state, dispatch } = useContext(UserContext);
+  const { state } = useContext(AuthContext);
   useEffect(() => {
+    const token = JSON.parse(localStorage.getItem("token"))
     const user = JSON.parse(localStorage.getItem("user"))
     if (user) {
-      dispatch({type:"USER",payload:user});
+      console.log(token)
       console.log(user)
     } else {
       history.push("/login");
@@ -34,14 +37,11 @@ const Routing = () => {
 };
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, initialState);
   return (
-    <UserContext.Provider value={{ state, dispatch }}>
-      <BrowserRouter>
+    <AuthProvider>
         <Navbar />
         <Routing />
-      </BrowserRouter>
-    </UserContext.Provider>
+    </AuthProvider>
   );
 }
 
