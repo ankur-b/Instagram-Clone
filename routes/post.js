@@ -5,7 +5,8 @@ const requireAuth = require("../middleware/requireAuth");
 
 router.get("/posts", requireAuth, (req, res) => {
   Post.find()
-    .populate("postedBy", "id name")
+    .populate("postedBy", "_id name")
+    .populate("comments.postedBy", "_id name")
     .then((posts) => {
       res.json({ posts });
     })
@@ -85,7 +86,9 @@ router.put("/comment", requireAuth, (req, res) => {
     {
       new: true,
     }
-  ).populate("comments.postedBy","_id name").exec((err,result)=>{
+  ).populate("comments.postedBy","_id name")
+  .populate("postedBy","_id name")
+  .exec((err,result)=>{
     if(err){
       return json.status(422).json({error:err})
     }else{
