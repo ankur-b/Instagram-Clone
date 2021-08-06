@@ -3,9 +3,9 @@ const router = express.Router();
 const Post = require("../models/post");
 const requireAuth = require("../middleware/requireAuth");
 
-router.get("/posts", requireAuth,(req, res) => {
+router.get("/posts", requireAuth, (req, res) => {
   Post.find()
-    .populate("postedBy","id name")
+    .populate("postedBy", "id name")
     .then((posts) => {
       res.json({ posts });
     })
@@ -15,12 +15,12 @@ router.get("/posts", requireAuth,(req, res) => {
 });
 
 router.post("/createpost", requireAuth, (req, res) => {
-  const { title, body,pic } = req.body;
+  const { title, body, pic } = req.body;
   if (!title || !body || !pic) {
     return res.status(422).json({ error: "Please add all the fields" });
   }
   req.user.password = undefined;
-  const post = new Post({ title, body, photo:pic,postedBy: req.user });
+  const post = new Post({ title, body, photo: pic, postedBy: req.user });
   post
     .save()
     .then((result) => {
@@ -30,12 +30,46 @@ router.post("/createpost", requireAuth, (req, res) => {
       console.log(err);
     });
 });
-router.get('/mypost',requireAuth,(req,res)=>{
-    Post.find({postedBy:req.user._id})
-    .populate("postedBy","id name")
-    .then(mypost=>{
-        res.json({mypost})
+router.get("/mypost", requireAuth, (req, res) => {
+  Post.find({ postedBy: req.user._id })
+    .populate("postedBy", "id name")
+    .then((mypost) => {
+      res.json({ mypost });
     })
-    .catch(err=>console.log(err))
-})
+    .catch((err) => console.log(err));
+});
+router.post("/like", requireAuth, (req, res) => {
+  Post.findByIdAndUpdate(
+    req.body.postId,
+    {
+      $push: { likes: req.user._id },
+    },
+    {
+      new: true,
+    }
+  ).exec((err,result)=>{
+    if(err){
+      return json.status(422).json({error:err})
+    }else{
+      res.json(result)
+    }
+  })
+});
+router.post("/unlike", requireAuth, (req, res) => {
+  Post.findByIdAndUpdate(
+    req.body.postId,
+    {
+      $pull: { likes: req.user._id },
+    },
+    {
+      new: true,
+    }
+  ).exec((err,result)=>{
+    if(err){
+      return json.status(422).json({error:err})
+    }else{
+      res.json(result)
+    }
+  })
+});
 module.exports = router;

@@ -40,7 +40,7 @@ const Profile = () => {
         </div>
         <div>
           {console.log(state)}
-          <h4>{state?state.user.name:""}</h4>
+          <h4>{state.user?state.user.name:""}</h4>
           <div
             style={{
               display: "flex",
