@@ -38,7 +38,7 @@ router.get("/mypost", requireAuth, (req, res) => {
     })
     .catch((err) => console.log(err));
 });
-router.post("/like", requireAuth, (req, res) => {
+router.put("/like", requireAuth, (req, res) => {
   Post.findByIdAndUpdate(
     req.body.postId,
     {
@@ -55,7 +55,7 @@ router.post("/like", requireAuth, (req, res) => {
     }
   })
 });
-router.post("/unlike", requireAuth, (req, res) => {
+router.put("/unlike", requireAuth, (req, res) => {
   Post.findByIdAndUpdate(
     req.body.postId,
     {
