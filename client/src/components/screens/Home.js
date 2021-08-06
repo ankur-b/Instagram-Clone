@@ -84,15 +84,30 @@ const Home = () => {
             return item;
           }
         });
-        setData(newdata)
-      }).catch((err) => console.log(err));
+        setData(newdata);
+      })
+      .catch((err) => console.log(err));
+  };
+  const deletepost = (postId) => {
+    fetch(`/deletepost/${postId}`, {
+      method: "delete",
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    }).then(res=>res.json())
+    .then(result=>{
+      const newData = data.filter(item=>{
+        return item._id !== result._id
+      })
+      setData(newData)
+    })
   };
   return (
     <div className="home container">
       {data.map((item) => {
         return (
           <div className="card home-card" key={item._id}>
-            <h5>{item.postedBy.name}</h5>
+            <h5>{item.postedBy.name} {item.postedBy._id===state.user._id?<i className="material-icons" style={{float:"right"}} onClick={()=>{deletepost(item._id)}} >delete</i>:""} </h5>
             <div className="card-image">
               <img src={item.photo} alt="Wallpaper" />
             </div>
@@ -122,13 +137,16 @@ const Home = () => {
               <h6>{item.likes.length} likes</h6>
               <h6>{item.title}</h6>
               <p>{item.body}</p>
-              {
-                item.comments.map(record=>{
-                  return (
-                    <h6 key={record._id}><span style={{fontWeight:"500"}}>{record.postedBy.name}</span> {record.text}</h6>
-                  )
-                })
-              }
+              {item.comments.map((record) => {
+                return (
+                  <h6 key={record._id}>
+                    <span style={{ fontWeight: "500" }}>
+                      {record.postedBy.name}
+                    </span>{" "}
+                    {record.text}
+                  </h6>
+                );
+              })}
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
