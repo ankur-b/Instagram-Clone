@@ -8,6 +8,7 @@ const app = express()
 
 const authRoutes = require('./routes/auth')
 const postRoutes = require('./routes/post')
+const userRoutes = require('./routes/user')
 
 mongoose.connect(mongouri,{
     useNewUrlParser:true,
@@ -23,6 +24,7 @@ app.use(express.json());
 //app.use(cors())
 app.use(authRoutes);
 app.use(postRoutes)
+app.use(userRoutes)
 app.listen(5000, () => {
     console.log('App listening on port 5000!');
 });

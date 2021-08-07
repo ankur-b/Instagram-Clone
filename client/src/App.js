@@ -1,4 +1,4 @@
-import React, { useEffect, createContext, useContext, useReducer } from "react";
+import React, { useEffect, createContext, useContext } from "react";
 import "./App.css";
 import Navbar from "./components/Navbar";
 import Home from "./components/screens/Home";
@@ -6,21 +6,20 @@ import Profile from "./components/screens/Profile";
 import Login from "./components/screens/Login";
 import Signup from "./components/screens/Signup";
 import CreatePost from "./components/screens/CreatePost";
-import { Route, useHistory, Switch } from "react-router-dom";
-import { reducer, initialState } from "./reducer/userReducer";
-import {Provider as AuthProvider} from "./Context/AuthContext"
-import {Context as AuthContext} from './Context/AuthContext' 
+import UserProfile from "./components/screens/UserProfile";
+import { Route, BrowserRouter, useHistory, Switch } from "react-router-dom";
+import { Provider as AuthProvider } from "./Context/AuthContext";
+import { Context as AuthContext } from "./Context/AuthContext";
 export const UserContext = createContext();
 
 const Routing = () => {
   const history = useHistory();
-  const { state } = useContext(AuthContext);
+  const {TryLocalSignin } = useContext(AuthContext);
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("token"))
-    const user = JSON.parse(localStorage.getItem("user"))
-    if (user) {
-      console.log(token)
-      console.log(user)
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user&&token) {
+      TryLocalSignin({history}) 
     } else {
       history.push("/login");
     }
@@ -28,10 +27,11 @@ const Routing = () => {
   return (
     <Switch>
       <Route exact path="/" component={Home} />
-      <Route path="/profile" component={Profile} />
+      <Route exact path="/profile" component={Profile} />
       <Route path="/login" component={Login} />
       <Route path="/signup" component={Signup} />
       <Route path="/createpost" component={CreatePost} />
+      <Route path="/profile/:userid" component={UserProfile} />
     </Switch>
   );
 };
@@ -39,8 +39,10 @@ const Routing = () => {
 function App() {
   return (
     <AuthProvider>
+      <BrowserRouter>
         <Navbar />
         <Routing />
+      </BrowserRouter>
     </AuthProvider>
   );
 }

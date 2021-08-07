@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Context as AuthContext } from "../../Context/AuthContext";
+import {Link} from 'react-router-dom'
 import "./home.css";
 const Home = () => {
   const { state } = useContext(AuthContext);
@@ -15,6 +16,8 @@ const Home = () => {
         setData(result.posts);
       });
   }, []);
+  console.log(localStorage.getItem("token"))
+  console.log(localStorage.getItem("user"))
   const likepost = (id) => {
     fetch("/like", {
       method: "put",
@@ -130,7 +133,7 @@ const Home = () => {
         return (
           <div className="card home-card" key={item._id}>
             <h5>
-              {item.postedBy.name}{" "}
+              <Link to={(item.postedBy._id !== state.user._id)?"/profile/"+item.postedBy._id:"/profile"}>{item.postedBy.name}</Link>
               {item.postedBy._id === state.user._id ? (
                 <i
                   className="material-icons"
@@ -143,7 +146,7 @@ const Home = () => {
                 </i>
               ) : (
                 ""
-              )}{" "}
+              )}
             </h5>
             <div className="card-image">
               <img src={item.photo} alt="Wallpaper" />

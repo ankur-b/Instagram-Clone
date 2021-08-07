@@ -1,6 +1,6 @@
 import createDataContext from "./createDataContext";
 import M from "materialize-css";
-import { useHistory, Redirect } from "react-router-dom";
+
 const AuthReducer = (state, action) => {
   switch (action.type) {
     case "ADD_ERROR":
@@ -15,6 +15,16 @@ const AuthReducer = (state, action) => {
       return state;
   }
 };
+const TryLocalSignin=dispatch=>({history})=>{
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log("userdsd")
+  if (token && user){
+    dispatch({ type: "SIGNIN", payload: token, user: user });
+  }else{
+    history.push("/login");
+  }
+}
 const Signin =
   (dispatch) =>
   ({ email, password, history }) => {
@@ -34,7 +44,8 @@ const Signin =
           M.toast({ html: data.error });
         } else {
           localStorage.setItem("token", data.token);
-          localStorage.setItem("user", data.user);
+          localStorage.setItem("user", JSON.stringify(data.user));
+          console.log(localStorage.getItem("user"))
           dispatch({ type: "SIGNIN", payload: data.token, user: data.user });
           M.toast({ html: "Signedup Successfully" });
           history.push("/");
@@ -66,7 +77,7 @@ const Signup =
           M.toast({ html: data.error });
         } else {
           localStorage.setItem("token", data.token);
-          localStorage.setItem("user", data.user);
+          localStorage.setItem("user", JSON.stringify(data.user));
           dispatch({ type: "signup", payload: data.token, user: data.user });
           M.toast({ html: data.message });
           history.push("/login");
@@ -81,6 +92,6 @@ const Signout=dispatch=>({history})=>{
 }
 export const { Provider, Context } = createDataContext(
   AuthReducer,
-  { Signup, Signin,Signout },
+  { Signup, Signin,Signout ,TryLocalSignin},
   { token: null, errorMessage: "", user: null }
 );

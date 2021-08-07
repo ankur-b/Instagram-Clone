@@ -6,8 +6,9 @@ import "./Navbar.css";
 const Navbar = () => {
   const { state, Signout } = useContext(AuthContext);
   const history = useHistory();
+  const user = JSON.parse(localStorage.getItem("user"))
   const renderList = () => {
-    if (state.user) {
+    if (user) {
       return [
         <li>
           <Link to="/profile">Profile</Link>
@@ -41,7 +42,7 @@ const Navbar = () => {
     <nav className="white">
       <div className="container">
         <div className="nav-wrapper">
-          <Link to={state.user ? "/" : "/login"} className="brand-logo">
+          <Link to={user ? "/" : "/login"} className="brand-logo">
             Instagram
           </Link>
           <ul id="nav-mobile" className="right hide-on-med-and-down">
