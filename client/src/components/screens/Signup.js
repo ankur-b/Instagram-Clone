@@ -84,7 +84,7 @@ const Signup = () => {
                 class="btn waves-effect black waves-light btn-small"
                 onClick={()=>PostData()}
               >
-                Signin
+                Signup
               </button>
             </div>
           </div>

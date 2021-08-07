@@ -94,20 +94,57 @@ const Home = () => {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
-    }).then(res=>res.json())
-    .then(result=>{
-      const newData = data.filter(item=>{
-        return item._id !== result._id
-      })
-      setData(newData)
     })
+      .then((res) => res.json())
+      .then((result) => {
+        const newData = data.filter((item) => {
+          return item._id !== result._id;
+        });
+        setData(newData);
+      })
+      .catch((err) => console.log(err));
+  };
+  const deletecomment = (commentId, postId) => {
+    fetch(`/deletecomment/${postId}/${commentId}`, {
+      method: "put",
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        const newdata = data.map((item) => {
+          if (item._id === result._id) {
+            return result;
+          } else {
+            return item;
+          }
+        });
+        setData(newdata);
+      })
+      .catch((err) => console.log(err));
   };
   return (
     <div className="home container">
       {data.map((item) => {
         return (
           <div className="card home-card" key={item._id}>
-            <h5>{item.postedBy.name} {item.postedBy._id===state.user._id?<i className="material-icons" style={{float:"right"}} onClick={()=>{deletepost(item._id)}} >delete</i>:""} </h5>
+            <h5>
+              {item.postedBy.name}{" "}
+              {item.postedBy._id === state.user._id ? (
+                <i
+                  className="material-icons"
+                  style={{ float: "right" }}
+                  onClick={() => {
+                    deletepost(item._id);
+                  }}
+                >
+                  delete
+                </i>
+              ) : (
+                ""
+              )}{" "}
+            </h5>
             <div className="card-image">
               <img src={item.photo} alt="Wallpaper" />
             </div>
@@ -144,6 +181,20 @@ const Home = () => {
                       {record.postedBy.name}
                     </span>{" "}
                     {record.text}
+                    {record.postedBy._id === state.user._id ||
+                    state.user._id === item.postedBy._id ? (
+                      <i
+                        className="material-icons"
+                        style={{ float: "right" }}
+                        onClick={() => {
+                          deletecomment(record._id, item._id);
+                        }}
+                      >
+                        delete
+                      </i>
+                    ) : (
+                      ""
+                    )}
                   </h6>
                 );
               })}
