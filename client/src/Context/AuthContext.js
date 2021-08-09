@@ -99,60 +99,64 @@ const Signout =
     dispatch({ type: "SIGNOUT" });
     history.push("/login");
   };
-const Follow = (dispatch) => ({userid}) => {
-  const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user"));
-  if (token && user) {
-    fetch("/follow", {
-      method: "put",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-      body: JSON.stringify({
-        followId: userid,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        localStorage.setItem("user",JSON.stringify(data))
-        console.log(data)
-        dispatch({
-          type: "UPDATE",
-          payload: token,
-          user: data,
+const Follow =
+  (dispatch) =>
+  ({ userid }) => {
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (token && user) {
+      fetch("/follow", {
+        method: "put",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        body: JSON.stringify({
+          followId: userid,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          localStorage.setItem("user", JSON.stringify(data));
+          console.log(data);
+          dispatch({
+            type: "UPDATE",
+            payload: token,
+            user: data,
+          });
         });
-      });
-  }
-};
-const unFollow = (dispatch) => ({userid}) => {
-  const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user"));
-  if (token && user) {
-    fetch("/unfollow", {
-      method: "put",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-      body: JSON.stringify({
-        unfollowId: userid,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        localStorage.setItem("user",JSON.stringify(data))
-        console.log(data)
-        dispatch({
-          type: "UPDATE",
-          payload: token,
-          user: data,
+    }
+  };
+const unFollow =
+  (dispatch) =>
+  ({ userid }) => {
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (token && user) {
+      fetch("/unfollow", {
+        method: "put",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        body: JSON.stringify({
+          unfollowId: userid,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          localStorage.setItem("user", JSON.stringify(data));
+          console.log(data);
+          dispatch({
+            type: "UPDATE",
+            payload: token,
+            user: data,
+          });
         });
-      });
-  }
-};
+    }
+  };
 export const { Provider, Context } = createDataContext(
   AuthReducer,
-  { Signup, Signin, Signout, TryLocalSignin, Follow,unFollow },
+  { Signup, Signin, Signout, TryLocalSignin, Follow, unFollow },
   { token: null, errorMessage: "", user: null }
 );

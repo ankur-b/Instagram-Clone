@@ -17,6 +17,9 @@ const Navbar = () => {
           <Link to="/createpost">Createpost</Link>
         </li>,
         <li>
+        <Link to="/myfollowing">My Following</Link>
+      </li>,
+        <li>
           <button
             class="btn waves-effect black waves-light btn-small"
             onClick={() => {

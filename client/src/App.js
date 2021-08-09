@@ -7,6 +7,7 @@ import Login from "./components/screens/Login";
 import Signup from "./components/screens/Signup";
 import CreatePost from "./components/screens/CreatePost";
 import UserProfile from "./components/screens/UserProfile";
+import SubscribedUserPosts from "./components/screens/SubscribedUserPosts";
 import { Route, BrowserRouter, useHistory, Switch } from "react-router-dom";
 import { Provider as AuthProvider } from "./Context/AuthContext";
 import { Context as AuthContext } from "./Context/AuthContext";
@@ -32,6 +33,7 @@ const Routing = () => {
       <Route path="/signup" component={Signup} />
       <Route path="/createpost" component={CreatePost} />
       <Route path="/profile/:userid" component={UserProfile} />
+      <Route path="/myfollowing" component={SubscribedUserPosts} />
     </Switch>
   );
 };

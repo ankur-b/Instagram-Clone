@@ -40,6 +40,7 @@ const Profile = () => {
         <div>
           {console.log(state)}
           <h4>{state.user?state.user.name:""}</h4>
+          <h6>{state.user?state.user.email:""}</h6>
           <div
             style={{
               display: "flex",

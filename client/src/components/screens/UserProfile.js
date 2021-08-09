@@ -4,9 +4,9 @@ import { useParams } from "react-router-dom";
 import "./profile.css";
 const Profile = () => {
   const [userProfile, setProfile] = useState(null);
-  const [showFollow, setShowFollow] = useState(true);
-  const { state, Follow, unFollow } = useContext(AuthContext);
   const { userid } = useParams();
+  const { state, Follow, unFollow } = useContext(AuthContext);
+  const [showFollow, setShowFollow] = useState(state.user?!state.user.following.includes(userid):true);
   useEffect(() => {
     fetch(`/user/${userid}`, {
       headers: {
@@ -83,7 +83,7 @@ const Profile = () => {
             </div>
             <div>
               <h4>{userProfile.user.name}</h4>
-              <h5>{userProfile.user.email}</h5>
+              <h6>{userProfile.user.email}</h6>
               <div
                 style={{
                   display: "flex",
