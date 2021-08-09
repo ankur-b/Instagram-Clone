@@ -12,7 +12,6 @@ const Profile = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log(result);
         setPics(result.mypost);
       });
   }, []);
@@ -48,9 +47,9 @@ const Profile = () => {
               width: "108%",
             }}
           >
-            <h6>40 posts</h6>
-            <h6>40 followers</h6>
-            <h6>40 following</h6>
+            <h6>{mypics.length} posts</h6>
+            <h6>{state.user?state.user.followers.length:0} followers</h6>
+            <h6>{state.user?state.user.following.length:0} following</h6>
           </div>
         </div>
       </div>

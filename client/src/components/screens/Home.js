@@ -129,7 +129,7 @@ const Home = () => {
   };
   return (
     <div className="home container">
-      {data.map((item) => {
+      {data?data.map((item) => {
         return (
           <div className="card home-card" key={item._id}>
             <h5>
@@ -212,7 +212,7 @@ const Home = () => {
             </div>
           </div>
         );
-      })}
+      }):""}
     </div>
   );
 };

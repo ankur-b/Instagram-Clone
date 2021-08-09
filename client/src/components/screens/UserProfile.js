@@ -3,8 +3,9 @@ import { Context as AuthContext } from "../../Context/AuthContext";
 import { useParams } from "react-router-dom";
 import "./profile.css";
 const Profile = () => {
-  const [UserProfile, setProfile] = useState(null);
-  const { state, dispatch } = useContext(AuthContext);
+  const [userProfile, setProfile] = useState(null);
+  const [showFollow, setShowFollow] = useState(true);
+  const { state, Follow, unFollow } = useContext(AuthContext);
   const { userid } = useParams();
   useEffect(() => {
     fetch(`/user/${userid}`, {
@@ -14,17 +15,50 @@ const Profile = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log(result, "dbsjj");
         setProfile(result);
       })
       .catch((err) => console.log(err));
   }, []);
+  const followUser = async () => {
+    try {
+      await Follow({ userid });
+      setShowFollow(false)
+      setProfile((prevState) => {
+        return {
+          ...prevState,
+          user: {
+            ...prevState.user,
+            followers: [...prevState.user.followers, state.user._id],
+          },
+        };
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const unfollowUser = async () => {
+    try {
+      await unFollow({ userid });
+      setShowFollow(true)
+      setProfile((prevState) => {
+        const newFollower = prevState.user.followers.filter(item=>item!==state.user._id)
+        return {
+          ...prevState,
+          user: {
+            ...prevState.user,
+            followers: newFollower
+          },
+        };
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <>
-      {console.log(UserProfile)}
-      {!UserProfile ? (
-          <h2 className="container">Loading</h2>
-      
+      {console.log(userProfile)}
+      {!userProfile ? (
+        <h2 className="container">Loading</h2>
       ) : (
         <div className="container" style={{ maxWidth: 600 }}>
           <div
@@ -48,8 +82,8 @@ const Profile = () => {
               />
             </div>
             <div>
-              <h4>{UserProfile.user.name}</h4>
-              <h5>{UserProfile.user.email}</h5>
+              <h4>{userProfile.user.name}</h4>
+              <h5>{userProfile.user.email}</h5>
               <div
                 style={{
                   display: "flex",
@@ -57,14 +91,45 @@ const Profile = () => {
                   width: "108%",
                 }}
               >
-                <h6>{UserProfile.posts.length}</h6>
-                <h6>40 followers</h6>
-                <h6>40 following</h6>
+                <h6>{userProfile.posts.length} posts</h6>
+                <h6>
+                  {userProfile.user.followers
+                    ? userProfile.user.followers.length
+                    : 0}{" "}
+                  followers
+                </h6>
+                <h6>
+                  {userProfile.user.following
+                    ? userProfile.user.following.length
+                    : 0}{" "}
+                  following
+                </h6>
               </div>
+              {showFollow ? (
+                <button
+                  class="btn waves-effect black waves-light btn-small"
+                  style={{margin:10}}
+                  onClick={() => {
+                    followUser();
+                  }}
+                >
+                  Follow
+                </button>
+              ) : (
+                <button
+                  class="btn waves-effect black waves-light btn-small"
+                  style={{margin:10}}
+                  onClick={() => {
+                    unfollowUser();
+                  }}
+                >
+                  UnFollow
+                </button>
+              )}
             </div>
           </div>
           <div className="gallery">
-            {UserProfile.posts.map((item) => {
+            {userProfile.posts.map((item) => {
               return (
                 <img
                   key={item._id}
