@@ -10,7 +10,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/signup", async(req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password,pic } = req.body;
   console.log(req.body)
   if (!email || !name || !password) {
     res.status(422).json({ error: "Please add all the fields" });
@@ -27,6 +27,7 @@ router.post("/signup", async(req, res) => {
           email: email,
           password: bcrypt.hashSync(password, salt),
           name: name,
+          pic:pic
       });
       try{
         await user.save()
@@ -57,8 +58,8 @@ router.post("/signin", (req, res) => {
       .then((isUser) => {
         if (isUser) {
           const token = jwt.sign({ _id: user._id }, SecretKey);
-          const {_id,name,email,followers,following} = user
-          res.json({ token,user:{_id,name,email,followers,following} });
+          const {_id,name,email,followers,following,pic} = user
+          res.json({ token,user:{_id,name,email,followers,following,pic} });
         } else {
           return res.status(422).json({ error: "Invalid email or password" });
         }
