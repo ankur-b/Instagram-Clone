@@ -27,7 +27,7 @@ const Profile = () => {
       >
         <div>
           <img
-            src="https://github.com/ankur-b.png"
+            src={state.user?state.user.pic:""}
             style={{
               width: 160,
               height: 160,
@@ -38,7 +38,6 @@ const Profile = () => {
           />
         </div>
         <div>
-          {console.log(state)}
           <h4>{state.user?state.user.name:""}</h4>
           <h6>{state.user?state.user.email:""}</h6>
           <div
@@ -48,7 +47,7 @@ const Profile = () => {
               width: "108%",
             }}
           >
-            <h6>{mypics.length} posts</h6>
+            <h6>{mypics?mypics.length:0} posts</h6>
             <h6>{state.user?state.user.followers.length:0} followers</h6>
             <h6>{state.user?state.user.following.length:0} following</h6>
           </div>

@@ -62,7 +62,7 @@ const Signin =
   };
 const Signup =
   (dispatch) =>
-  ({ name, email, password, history }) => {
+  ({ name, email, password, history,url }) => {
     fetch("/signup", {
       method: "post",
       headers: {
@@ -72,6 +72,7 @@ const Signup =
         name: name,
         email: email,
         password: password,
+        pic:url
       }),
     })
       .then((res) => res.json())

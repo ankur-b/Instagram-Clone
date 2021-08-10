@@ -71,7 +71,7 @@ const Profile = () => {
           >
             <div>
               <img
-                src="https://github.com/ankur-b.png"
+                src={userProfile.user.pic}
                 style={{
                   width: 160,
                   height: 160,
