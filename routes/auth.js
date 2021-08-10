@@ -31,9 +31,9 @@ router.post("/signup", async(req, res) => {
       });
       try{
         await user.save()
-        const {_id,name,email} = user
+        const {_id,name,email,pic} = user
         const token = jwt.sign({ userId: user._id }, SecretKey);
-        res.json({ message: "Saved Successfully",token,user:{_id,name,email} });
+        res.json({ message: "Saved Successfully",token,user:{_id,name,email,pic} });
       }catch(e){
         console.log(err);
             res.status(500).json({

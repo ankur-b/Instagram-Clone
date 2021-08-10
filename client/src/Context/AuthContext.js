@@ -18,7 +18,7 @@ const AuthReducer = (state, action) => {
         user: action.user,
       };
     case "UPDATEPIC":
-      return {...state,user:{...state.user,pic:action.payload}}
+      return { ...state, user: { ...state.user, pic: action.payload } };
     default:
       return state;
   }
@@ -54,7 +54,7 @@ const Signin =
         } else {
           localStorage.setItem("token", data.token);
           localStorage.setItem("user", JSON.stringify(data.user));
-          console.log(localStorage.getItem("user"));
+          console.log(data)
           dispatch({ type: "SIGNIN", payload: data.token, user: data.user });
           M.toast({ html: "Signedup Successfully" });
           history.push("/");
@@ -64,7 +64,7 @@ const Signin =
   };
 const Signup =
   (dispatch) =>
-  ({ name, email, password, history,url }) => {
+  ({ name, email, password, history, url }) => {
     fetch("/signup", {
       method: "post",
       headers: {
@@ -74,7 +74,7 @@ const Signup =
         name: name,
         email: email,
         password: password,
-        pic:url
+        pic: url,
       }),
     })
       .then((res) => res.json())
@@ -158,16 +158,31 @@ const unFollow =
         });
     }
   };
-const UpdatePic = dispatch =>({url})=>{
-  const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user"));
-  if(token&&user){
-    localStorage.setItem("user",JSON.stringify({...user,pic:url}))
-    dispatch({type:"UPDATEPIC",payload:url}) 
-  }
-}
+const UpdatePic =
+  (dispatch) =>
+  ( {url} ) => {
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (token && user) {
+      fetch("/updatepic", {
+        method: "put",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        body:JSON.stringify({
+          pic:url
+        })
+      }).then(res=>res.json())
+      .then(result=>{
+        console.log(result)
+        localStorage.setItem("user", JSON.stringify({ ...user, pic: url }));
+        dispatch({type:"UPDATEPIC",payload:url})
+      })
+    }
+  };
 export const { Provider, Context } = createDataContext(
   AuthReducer,
-  { Signup, Signin, Signout, TryLocalSignin, Follow, unFollow,UpdatePic },
+  { Signup, Signin, Signout, TryLocalSignin, Follow, unFollow, UpdatePic },
   { token: null, errorMessage: "", user: null }
 );

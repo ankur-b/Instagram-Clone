@@ -1,5 +1,6 @@
 import React, { useState,useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import Api from '../../cloudinaryApi'
 import M from "materialize-css";
 const CreatePost = () => {
   const history = useHistory();
@@ -39,7 +40,7 @@ const CreatePost = () => {
     data.append("upload_preset", "insta-clone");
     data.append("cloud_name", "instaaclone");
     fetch(
-      "https://api.cloudinary.com/v1_1/instaaclone/image/upload",
+      Api,
       {
         method: "post",
         body: data,

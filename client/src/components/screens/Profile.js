@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Context as AuthContext } from "../../Context/AuthContext";
+import Api from '../../cloudinaryApi'
 import "./profile.css";
 const Profile = () => {
   const [mypics, setPics] = useState([]);
+  const { state, UpdatePic } = useContext(AuthContext);
   const [image, setImage] = useState("");
-  const [url, setUrl] = useState("");
-  const { state, dispatch ,UpdatePic} = useContext(AuthContext);
   useEffect(() => {
     fetch("/mypost", {
       headers: {
@@ -18,26 +18,22 @@ const Profile = () => {
       });
   }, []);
   useEffect(() => {
-    const data = new FormData();
-    data.append("file", image);
-    data.append("upload_preset", "insta-clone");
-    data.append("cloud_name", "instaaclone");
-    fetch(
-      "https://api.cloudinary.com/v1_1/instaaclone/image/upload",
-      {
+    if (image) {
+      const data = new FormData();
+      data.append("file", image);
+      data.append("upload_preset", "insta-clone");
+      data.append("cloud_name", "instaaclone");
+      fetch(Api, {
         method: "post",
         body: data,
-      },
-      {}
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setUrl(data.url);
-        console.log(data)
-        UpdatePic({url})
       })
-      .catch((err) => console.log(err));
-  }, [image,url]);
+        .then((res) => res.json())
+        .then((data) => {
+          UpdatePic({ url: data.url });
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [image]);
   const updatePhoto = (file) => {
     setImage(file);
   };

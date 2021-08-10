@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
     },
     pic:{
         type:String,
-        default:"https://res.cloudinary.com/instaaclone/image/upload/v1628564239/no-image_oguelq.jpg"
+        default:"https://res.cloudinary.com/instaaclone/image/upload/v1628575036/no-image_hat0ea.jpg"
     },
     followers:[{
         type:ObjectId,

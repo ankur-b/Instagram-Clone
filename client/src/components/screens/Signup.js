@@ -3,7 +3,7 @@ import "../../App.css";
 import { Link, useHistory } from "react-router-dom";
 import M from "materialize-css";
 import { Context as AuthContext } from "../../Context/AuthContext";
-//import Api from '../../Api/Api'
+import Api from '../../cloudinaryApi'
 const Signup = () => {
   const history = useHistory();
   const { state, Signup } = useContext(AuthContext);
@@ -23,7 +23,7 @@ const Signup = () => {
     data.append("upload_preset", "insta-clone");
     data.append("cloud_name", "instaaclone");
     fetch(
-      "https://api.cloudinary.com/v1_1/instaaclone/image/upload",
+      Api,
       {
         method: "post",
         body: data,
