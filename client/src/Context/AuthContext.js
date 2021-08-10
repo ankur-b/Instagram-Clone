@@ -17,6 +17,8 @@ const AuthReducer = (state, action) => {
         token: action.payload,
         user: action.user,
       };
+    case "UPDATEPIC":
+      return {...state,user:{...state.user,pic:action.payload}}
     default:
       return state;
   }
@@ -156,8 +158,16 @@ const unFollow =
         });
     }
   };
+const UpdatePic = dispatch =>({url})=>{
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
+  if(token&&user){
+    localStorage.setItem("user",JSON.stringify({...user,pic:url}))
+    dispatch({type:"UPDATEPIC",payload:url}) 
+  }
+}
 export const { Provider, Context } = createDataContext(
   AuthReducer,
-  { Signup, Signin, Signout, TryLocalSignin, Follow, unFollow },
+  { Signup, Signin, Signout, TryLocalSignin, Follow, unFollow,UpdatePic },
   { token: null, errorMessage: "", user: null }
 );

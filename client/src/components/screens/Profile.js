@@ -3,7 +3,9 @@ import { Context as AuthContext } from "../../Context/AuthContext";
 import "./profile.css";
 const Profile = () => {
   const [mypics, setPics] = useState([]);
-  const { state, dispatch } = useContext(AuthContext);
+  const [image, setImage] = useState("");
+  const [url, setUrl] = useState("");
+  const { state, dispatch ,UpdatePic} = useContext(AuthContext);
   useEffect(() => {
     fetch("/mypost", {
       headers: {
@@ -15,6 +17,30 @@ const Profile = () => {
         setPics(result.mypost);
       });
   }, []);
+  useEffect(() => {
+    const data = new FormData();
+    data.append("file", image);
+    data.append("upload_preset", "insta-clone");
+    data.append("cloud_name", "instaaclone");
+    fetch(
+      "https://api.cloudinary.com/v1_1/instaaclone/image/upload",
+      {
+        method: "post",
+        body: data,
+      },
+      {}
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setUrl(data.url);
+        console.log(data)
+        UpdatePic({url})
+      })
+      .catch((err) => console.log(err));
+  }, [image,url]);
+  const updatePhoto = (file) => {
+    setImage(file);
+  };
   return (
     <div className="container" style={{ maxWidth: 600 }}>
       <div
@@ -25,7 +51,7 @@ const Profile = () => {
           borderBottom: "1px solid black",
         }}
       >
-        <div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
           <img
             src={state.user ? state.user.pic : ""}
             style={{
@@ -36,12 +62,23 @@ const Profile = () => {
             }}
             alt="Profile pic"
           />
-          <button
-            class="btn waves-effect black waves-light btn-small"
-            onClick={() => {}}
-          >
-            Signup
-          </button>
+          <div class="row">
+            <div
+              className="file-field input-field"
+              style={{ marginTop: 20, width: "80%", height: 0 }}
+            >
+              <div class="btn waves-effect black waves-light btn-small">
+                <span>Upload Profile Picture</span>
+                <input
+                  type="file"
+                  onChange={(e) => updatePhoto(e.target.files[0])}
+                />
+              </div>
+              <div className="file-path-wrapper">
+                <input class="file-path validate" type="text" />
+              </div>
+            </div>
+          </div>
         </div>
         <div>
           <h4>{state.user ? state.user.name : ""}</h4>
