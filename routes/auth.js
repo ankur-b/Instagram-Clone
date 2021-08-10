@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const SecretKey = require("../secret_key");
+const {JWT_SECRET} = require('../config/keys')
 const requireAuth = require("../middleware/requireAuth");
 router.get("/", (req, res) => {
   res.send("hello world");
@@ -32,7 +32,7 @@ router.post("/signup", async(req, res) => {
       try{
         await user.save()
         const {_id,name,email,pic} = user
-        const token = jwt.sign({ userId: user._id }, SecretKey);
+        const token = jwt.sign({ userId: user._id }, JWT_SECRET);
         res.json({ message: "Saved Successfully",token,user:{_id,name,email,pic} });
       }catch(e){
         console.log(err);
@@ -57,7 +57,7 @@ router.post("/signin", (req, res) => {
       .compare(password, user.password)
       .then((isUser) => {
         if (isUser) {
-          const token = jwt.sign({ _id: user._id }, SecretKey);
+          const token = jwt.sign({ _id: user._id }, JWT_SECRET);
           const {_id,name,email,followers,following,pic} = user
           res.json({ token,user:{_id,name,email,followers,following,pic} });
         } else {

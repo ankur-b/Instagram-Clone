@@ -1,16 +1,15 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const bodyParser = require('body-parser')
-var cors = require('cors')
-const mongouri = require('./db')
+const cors = require('cors')
+const {MONGOURI} = require('./config/keys')
 
 const app = express()
-
+const PORT = process.env.PORT || 5000
 const authRoutes = require('./routes/auth')
 const postRoutes = require('./routes/post')
 const userRoutes = require('./routes/user')
 
-mongoose.connect(mongouri,{
+mongoose.connect(MONGOURI,{
     useNewUrlParser:true,
     useUnifiedTopology:true
 })
@@ -25,6 +24,15 @@ app.use(express.json());
 app.use(authRoutes);
 app.use(postRoutes)
 app.use(userRoutes)
-app.listen(5000, () => {
+
+if(process.env.NODE_ENV=="production"){
+    app.use(express.static('client/build'))
+    const path = require('path')
+    app.get("*",(req,res)=>{
+        res.sendFile(path.resolve(__dirname,'client','build','index.html'))
+    })
+}
+
+app.listen(PORT, () => {
     console.log('App listening on port 5000!');
 });
