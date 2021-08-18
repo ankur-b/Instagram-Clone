@@ -5,6 +5,8 @@ import Home from "./components/screens/Home";
 import Profile from "./components/screens/Profile";
 import Login from "./components/screens/Login";
 import Signup from "./components/screens/Signup";
+import Reset from "./components/screens/ResetPassword";
+import Newpassword from './components/screens/Newpassword'
 import CreatePost from "./components/screens/CreatePost";
 import UserProfile from "./components/screens/UserProfile";
 import SubscribedUserPosts from "./components/screens/SubscribedUserPosts";
@@ -22,6 +24,7 @@ const Routing = () => {
     if (user&&token) {
       TryLocalSignin({history}) 
     } else {
+      // if (!history.location.pathname.startsWith("/reset"))
       history.push("/login");
     }
   }, []);
@@ -34,6 +37,8 @@ const Routing = () => {
       <Route path="/createpost" component={CreatePost} />
       <Route path="/profile/:userid" component={UserProfile} />
       <Route path="/myfollowing" component={SubscribedUserPosts} />
+       {/* <Route exact path="/reset" component={Reset} />
+      <Route path="/reset/:token" component={Newpassword} /> */}
     </Switch>
   );
 };

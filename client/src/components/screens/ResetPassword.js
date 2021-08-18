@@ -1,13 +1,11 @@
 import React, { useState, useContext } from "react";
 import "../../App.css";
-import { UserContext } from "../../App";
 import { Link, useHistory } from "react-router-dom";
 import { Context as AuthContext } from "../../Context/AuthContext";
 import M from "materialize-css";
-const Login = () => {
-  const { state, Signin } = useContext(AuthContext);
+const Reset = () => {
+  const { ResetPassword } = useContext(AuthContext);
   const history = useHistory();
-  const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const PostData = () => {
     let isValidEmail = true;
@@ -18,13 +16,13 @@ const Login = () => {
       }
     }
     if (isValidEmail) {
-      Signin({ email, password, history });
+      ResetPassword({ email, history });
     }
   };
   return (
     <div className="container">
       <div class="row" style={{ marginTop: 100, width: "60%" }}>
-        <h2 class="center-align text-darken-2">Login</h2>
+        <h2 class="center-align text-darken-2">Reset Password</h2>
         <div class="row">
           <div class="input-field col s10 offset-s1">
             <input
@@ -41,54 +39,18 @@ const Login = () => {
           </div>
         </div>
         <div class="row">
-          <div class="input-field col s10 offset-s1">
-            <input
-              name="password"
-              type="password"
-              class="validate"
-              id="password"
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-              required
-            />
-            <label for="password">Password</label>
-            <span class="helper-text " data-error="Enter Password"></span>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col s6 offset-s1">
-            Not a member?
-            <Link
-              to="/signup"
-              class=" btn-flat"
-              style={{ marginLeft: 20, border: "1px solid black" }}
-            >
-              Sign Up
-            </Link>
-          </div>
           <div class="right-align col s3 offset-s1">
             <button
               class="btn waves-effect black waves-light btn-small"
               onClick={() => PostData()}
             >
-              Login
+              Reset Password
             </button>
           </div>
         </div>
-        {/* <div class="row">
-          <div class="col s12 ">
-            <Link
-              to="/reset"
-              class=" btn-flat"
-              style={{ marginLeft: 45, border: "1px solid black" }}
-            >
-              Forget Password?
-            </Link>
-          </div>
-        </div> */}
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Reset;
