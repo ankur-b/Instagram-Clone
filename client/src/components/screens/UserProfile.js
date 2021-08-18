@@ -56,7 +56,6 @@ const Profile = () => {
   };
   return (
     <>
-      {console.log(userProfile)}
       {!userProfile ? (
         <h2 className="container">Loading</h2>
       ) : (

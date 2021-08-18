@@ -16,8 +16,6 @@ const Home = () => {
         setData(result.posts);
       });
   }, []);
-  console.log(localStorage.getItem("token"))
-  console.log(localStorage.getItem("user"))
   const likepost = (id) => {
     fetch("/like", {
       method: "put",

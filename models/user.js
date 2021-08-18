@@ -14,12 +14,12 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    resetToken:String,
-    expireToken:Date,
     pic:{
         type:String,
         default:"https://res.cloudinary.com/instaaclone/image/upload/v1628575036/no-image_hat0ea.jpg"
     },
+    resetToken:String,
+    expireToken:Date,
     followers:[{
         type:ObjectId,
         ref:"User"

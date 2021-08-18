@@ -1,20 +1,20 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
-const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("../config/keys");
+const { JWT_SEC, EMAIL,PASSWORD,URL } = require("../config/keys");
 const requireAuth = require("../middleware/requireAuth");
 const nodemailer = require("nodemailer");
 const sendgridTransport = require("nodemailer-sendgrid-transport");
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  service: 'gmail',
   auth: {
-    user: "", //
-    pass: "",
-  },
+      user: EMAIL, // 
+      pass: PASSWORD// 
+  }
 });
 
 router.post("/signup", async (req, res) => {
@@ -38,24 +38,24 @@ router.post("/signup", async (req, res) => {
       try {
         await user.save();
         const { _id, name, email, pic } = user;
-        const token = jwt.sign({ userId: user._id }, JWT_SECRET);
-        //   transporter.sendMail({
-        //     to: user.email,
-        //     from: "ankurbarve29@gmail.com",
-        //     subject: "signup success",
-        //     html: "<h1>welcome to instagram</h1>",
-        //   }, (err, data) => {
-        //     if (err) {
-        //         return log('Error occurs');
-        //     }
-        //     return log('Email sent!!!');
-        // });
+        const token = jwt.sign({ userId: user._id }, JWT_SEC);
+      //   transporter.sendMail({
+      //     to: user.email,
+      //     from: "ankurbarve29@gmail.com",
+      //     subject: "signup success",
+      //     html: "<h1>welcome to instagram</h1>",
+      //   }, (err, data) => {
+      //     if (err) {
+      //         return log('Error occurs');
+      //     }
+      //     return log('Email sent!!!');
+      // });
         res.json({
           message: "Saved Successfully",
           token,
           user: { _id, name, email, pic },
         });
-      } catch (e) {
+      } catch (err) {
         console.log(err);
         res.status(500).json({
           err: err,
@@ -78,7 +78,7 @@ router.post("/signin", (req, res) => {
       .compare(password, user.password)
       .then((isUser) => {
         if (isUser) {
-          const token = jwt.sign({ _id: user._id }, JWT_SECRET);
+          const token = jwt.sign({ _id: user._id }, JWT_SEC);
           const { _id, name, email, followers, following, pic } = user;
           res.json({
             token,
@@ -91,6 +91,7 @@ router.post("/signin", (req, res) => {
       .catch((err) => console.log(err));
   });
 });
+
 router.post("/reset-password", (req, res) => {
   crypto.randomBytes(32, (err, buffer) => {
     if (err) {
@@ -144,4 +145,5 @@ router.post('/new-password',(req,res)=>{
       console.log(err)
   })
 })
+
 module.exports = router;

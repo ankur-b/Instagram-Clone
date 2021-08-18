@@ -117,7 +117,7 @@ const Signup = () => {
         </div>
         <div class="row">
           <div class="col s6 offset-s1">
-            Already a member?
+            Already a user?
             <Link
               to="/login"
               class=" btn-flat"

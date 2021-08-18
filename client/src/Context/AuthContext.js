@@ -54,7 +54,6 @@ const Signin =
         } else {
           localStorage.setItem("token", data.token);
           localStorage.setItem("user", JSON.stringify(data.user));
-          console.log(data)
           dispatch({ type: "SIGNIN", payload: data.token, user: data.user });
           M.toast({ html: "Signedup Successfully" });
           history.push("/");
@@ -86,8 +85,6 @@ const Signup =
           });
           M.toast({ html: data.error });
         } else {
-          localStorage.setItem("token", data.token);
-          localStorage.setItem("user", JSON.stringify(data.user));
           dispatch({ type: "signup", payload: data.token, user: data.user });
           M.toast({ html: data.message });
           history.push("/login");
@@ -121,7 +118,6 @@ const Follow =
         .then((res) => res.json())
         .then((data) => {
           localStorage.setItem("user", JSON.stringify(data));
-          console.log(data);
           dispatch({
             type: "UPDATE",
             payload: token,
@@ -149,7 +145,6 @@ const unFollow =
         .then((res) => res.json())
         .then((data) => {
           localStorage.setItem("user", JSON.stringify(data));
-          console.log(data);
           dispatch({
             type: "UPDATE",
             payload: token,
@@ -160,7 +155,7 @@ const unFollow =
   };
 const UpdatePic =
   (dispatch) =>
-  ( {url} ) => {
+  ({ url }) => {
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user"));
     if (token && user) {
@@ -170,19 +165,42 @@ const UpdatePic =
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
-        body:JSON.stringify({
-          pic:url
-        })
-      }).then(res=>res.json())
-      .then(result=>{
-        console.log(result)
-        localStorage.setItem("user", JSON.stringify({ ...user, pic: url }));
-        dispatch({type:"UPDATEPIC",payload:url})
+        body: JSON.stringify({
+          pic: url,
+        }),
       })
+        .then((res) => res.json())
+        .then((result) => {
+          localStorage.setItem("user", JSON.stringify({ ...user, pic: url }));
+          dispatch({ type: "UPDATEPIC", payload: url });
+        });
     }
+  };
+const ResetPassword =
+  (dispatch) =>
+  ({ email, history }) => {
+    fetch("/reset-password", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          M.toast({ html: data.error });
+        } else {
+          M.toast({ html: data.message });
+          history.push("/login");
+        }
+      })
+      .catch((err) => console.log(err));
   };
 export const { Provider, Context } = createDataContext(
   AuthReducer,
-  { Signup, Signin, Signout, TryLocalSignin, Follow, unFollow, UpdatePic },
+  { Signup, Signin, Signout, TryLocalSignin, Follow, unFollow, UpdatePic,ResetPassword },
   { token: null, errorMessage: "", user: null }
 );

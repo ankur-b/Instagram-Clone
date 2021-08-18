@@ -5,3 +5,7 @@ a{
 .brand-logo,h2{
     font-family: 'Pacifico', cursive;
 }
+.collection-item{
+    color: black;
+    width: 100%;
+}

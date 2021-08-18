@@ -9,6 +9,7 @@ const authRoutes = require('./routes/auth')
 const postRoutes = require('./routes/post')
 const userRoutes = require('./routes/user')
 
+
 mongoose.connect(MONGOURI,{
     useNewUrlParser:true,
     useUnifiedTopology:true
